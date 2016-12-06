@@ -34,8 +34,8 @@ public class JDBCTestMysql1 {
   {
     String[] tables = new String[]{"Payments1","Orders1","OrderDetails1","Products1","Offices1","Employees1","Customers1"};
     //String [] tables = new String[]{"Payments1"};
-    for(String s: tables){
-      deleteTable(conn, s);
+    for(String table: tables){
+      deleteTable(conn, table);
     }
   }
 
@@ -50,6 +50,26 @@ public class JDBCTestMysql1 {
     createOrderDetails1(conn);
     createOrders1(conn);
     createPayments1(conn);
+  }
+
+  public static void initAllTables(Connection conn)
+  {
+    String[] tables = new String[]{"Payments1","Orders1","OrderDetails1","Products1","Offices1","Employees1","Customers1"};
+    for(String table : tables){
+      initTable(conn,table);
+    }
+  }
+
+  public static void initAndCreateAllTables(Connection conn)
+  {
+    createAllTables(conn);
+    initAllTables(conn);
+  }
+
+  public static void resetTables(Connection conn)
+  {
+    deleteAllTables(conn);
+    initAndCreateAllTables(conn);
   }
 
   public static void createTable(Connection conn, String table)
@@ -167,6 +187,20 @@ public class JDBCTestMysql1 {
   + "PRIMARY KEY (customerNumber, checkNumber),"
   + "FOREIGN KEY (customerNumber) REFERENCES Customers1(customerNumber) )");
     createTable(conn, table);
+  }
+
+
+  /* General purpose table initializer */
+  public static void initTable(Connection conn, String tableName)
+  {
+    String str = "LOAD DATA LOCAL INFILE '" + fileName + ".txt' INTO TABLE \n"
+    + tableName + "FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES \n" +
+    + "TERMINATED BY '\n'"
+    try{
+      Statement s = conn.createStatement();
+      s.executeUpdate(str);
+    }
+    catch (Exception ee) {System.out.println("Error in filling table (" + tableName + ") : " + ee);}
   }
     
   public static void main(String args[]) {
