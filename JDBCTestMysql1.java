@@ -193,9 +193,9 @@ public class JDBCTestMysql1 {
   /* General purpose table initializer */
   public static void initTable(Connection conn, String tableName)
   {
-    String str = "LOAD DATA LOCAL INFILE '" + fileName + ".txt' INTO TABLE \n"
-    + tableName + "FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES \n" +
-    + "TERMINATED BY '\n'"
+    String str = "LOAD DATA LOCAL INFILE '" + tableName + ".txt' INTO TABLE \n"
+    + tableName + "FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES \n" 
+    + "TERMINATED BY '\n'";
     try{
       Statement s = conn.createStatement();
       s.executeUpdate(str);
