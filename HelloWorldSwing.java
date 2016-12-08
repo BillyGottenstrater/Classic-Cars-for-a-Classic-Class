@@ -1,13 +1,19 @@
 import javax.swing.*;        
 import java.awt.*; //Includes GridLayout and Dimension
+import java.awt.event.*;
 
-public class HelloWorldSwing {
+public class HelloWorldSwing implements ActionListener {
+
+    public HelloWorldSwing(){
+        System.out.println("Created");
+    }
+
     /**
      * Create the GUI and show it.  For thread safety,
      * this method should be invoked from the
      * event-dispatching thread.
      */
-    private static void createAndShowGUI() {
+    private void createAndShowGUI() {
         //Create and set up the window.
         JFrame frame = new JFrame("HelloWorldSwing");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -23,7 +29,7 @@ public class HelloWorldSwing {
         panel.add(cb);
         JButton btn = new JButton("Query");
         panel.add(btn);
-        
+        btn.addActionListener(this);
         frame.getContentPane().add(panel);
 
         //Add the ubiquitous "Hello World" label.
@@ -34,12 +40,17 @@ public class HelloWorldSwing {
         frame.setVisible(true);
     }
 
+    public void actionPerformed(ActionEvent e) {
+        System.out.println("Button clicked.");
+    }
+
     public static void main(String[] args) {
         //Schedule a job for the event-dispatching thread:
         //creating and showing this application's GUI.
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                createAndShowGUI();
+                HelloWorldSwing h = new HelloWorldSwing();
+                h.createAndShowGUI();
             }
         });
     }
