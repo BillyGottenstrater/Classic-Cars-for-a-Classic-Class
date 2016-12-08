@@ -13,27 +13,33 @@ public class HelloWorldSwing{
      * this method should be invoked from the
      * event-dispatching thread.
      */
-    private void createAndShowGUI() {
+    private static void createAndShowGUI() {
         //Create and set up the window.
         JFrame frame = new JFrame("HelloWorldSwing");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setPreferredSize(new Dimension(500, 500));
+        frame.setPreferredSize(new Dimension(600, 500));
 
         JPanel panel = new JPanel();
-        JLabel label = new JLabel("Construct your query");
+        JLabel label = new JLabel("Construct your query : ");
         label.setVisible(true); 
         panel.add(label);
         String[] choices = { "Highest","Lowest", "Average"};
         JComboBox<String> cb = new JComboBox<String>(choices);
         cb.setVisible(true);
         panel.add(cb);
+        JLabel label2 = new JLabel("spending");
+        panel.add(label2);
+        String[] choices2 = {"Country", "Customer"};
+        JComboBox<String> cb2 = new JComboBox<String>(choices2);
+        cb2.setVisible(true);
+        panel.add(cb2);
         JButton btn = new JButton("Query");
         panel.add(btn);
         btn.addActionListener( new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JFrame frame = new JFrame("Result");
                 frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-                frame.setPreferredSize(new Dimension(500, 50));
+                frame.setPreferredSize(new Dimension(600, 50));
                 JPanel panel = new JPanel();
                 JLabel label = new JLabel("The answer to your query");
                 panel.add(label);
@@ -58,8 +64,8 @@ public class HelloWorldSwing{
         //creating and showing this application's GUI.
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                HelloWorldSwing h = new HelloWorldSwing();
-                h.createAndShowGUI();
+                //HelloWorldSwing h = new HelloWorldSwing();
+                createAndShowGUI();
             }
         });
     }
