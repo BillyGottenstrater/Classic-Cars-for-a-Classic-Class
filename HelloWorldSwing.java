@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*; //Includes GridLayout and Dimension
 import java.awt.event.*;
 
-public class HelloWorldSwing implements ActionListener {
+public class HelloWorldSwing{
 
     public HelloWorldSwing(){
         System.out.println("Created");
@@ -29,7 +29,20 @@ public class HelloWorldSwing implements ActionListener {
         panel.add(cb);
         JButton btn = new JButton("Query");
         panel.add(btn);
-        btn.addActionListener(this);
+        btn.addActionListener( new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JFrame frame = new JFrame("Result");
+                frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+                frame.setPreferredSize(new Dimension(500, 50));
+                JPanel panel = new JPanel();
+                JLabel label = new JLabel("The answer to your query");
+                panel.add(label);
+                System.out.println("Button clicked.");
+                frame.getContentPane().add(panel);
+                frame.pack();
+                frame.setVisible(true);
+            }
+        });
         frame.getContentPane().add(panel);
 
         //Add the ubiquitous "Hello World" label.
@@ -38,10 +51,6 @@ public class HelloWorldSwing implements ActionListener {
         //Display the window.
         frame.pack();
         frame.setVisible(true);
-    }
-
-    public void actionPerformed(ActionEvent e) {
-        System.out.println("Button clicked.");
     }
 
     public static void main(String[] args) {
