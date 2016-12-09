@@ -54,7 +54,7 @@ public class JDBCTestMysql1 {
 
   public static void initAllTables(Connection conn)
   {
-    String[] tables = new String[]{"Payments1","Orders1","OrderDetails1","Products1","Offices1","Employees1","Customers1"};
+    String[] tables = new String[]{"Customers1","Employees1","Offices1","Products1","OrderDetails1","Orders1","Payments1"};
     for(String table : tables){
       initTable(conn,table);
     }
@@ -193,7 +193,7 @@ public class JDBCTestMysql1 {
   /* General purpose table initializer */
   public static void initTable(Connection conn, String tableName)
   {
-    String str = "LOAD DATA LOCAL INFILE '" + tableName + ".txt' INTO TABLE \n"
+    String str = "LOAD DATA LOCAL INFILE 'dataFiles/" + tableName + ".txt' INTO TABLE \n"
     + tableName + "FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES \n" 
     + "TERMINATED BY '\n'";
     try{
@@ -227,26 +227,7 @@ public class JDBCTestMysql1 {
     
     System.out.println("Connected");
     try {
-      //deleteAllTables(conn); 
-      Statement s1 = conn.createStatement();
-      deleteTable(conn, "Customers1");
-      createCustomers1(conn);
-      // String table = "CREATE TABLE Customers1 (";
-      // table += ("customerNumber INTEGER NOT NULL," 
-      //   + "customerName VARCHAR(50) NOT NULL,"
-      //   + "contactLastName VARCHAR(50) NOT NULL,"
-      //   + "contactFirstName VARCHAR(50) NOT NULL,"
-      //   + "phone VARCHAR(50) NOT NULL,"
-      //   + "addressLine1 VARCHAR(50) NOT NULL,"
-      //   + "addressLine2 VARCHAR(50) NULL,"
-      //   + "city VARCHAR(50) NOT NULL,"
-      //   + "state VARCHAR(50) NULL,"
-      //   + "postalCode VARCHAR(15) NULL,"
-      //   + "country VARCHAR(50) NOT NULL,"
-      //   + "salesRepEmployeeNumber INTEGER NULL,"
-      //   + "creditLimit DOUBLE NULL,");
-      // table += "PRIMARY KEY (customerNumber) )";
-
+      resetTables(conn);
       //System.out.println(table);
       // s1.executeUpdate("use dekhtyar");
       //s1.executeUpdate(table);

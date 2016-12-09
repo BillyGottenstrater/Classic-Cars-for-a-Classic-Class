@@ -18,18 +18,17 @@ public class HelloWorldSwing{
         JFrame frame = new JFrame("HelloWorldSwing");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setPreferredSize(new Dimension(600, 500));
-
         JPanel panel = new JPanel();
         JLabel label = new JLabel("Construct your query : ");
         label.setVisible(true); 
         panel.add(label);
-        String[] choices = { "Highest","Lowest", "Average"};
+        String[] choices = { "Highest","Lowest"};
         JComboBox<String> cb = new JComboBox<String>(choices);
         cb.setVisible(true);
         panel.add(cb);
         JLabel label2 = new JLabel("spending");
         panel.add(label2);
-        String[] choices2 = {"Country", "Customer"};
+        String[] choices2 = {"Country", "CustomerName"};
         JComboBox<String> cb2 = new JComboBox<String>(choices2);
         cb2.setVisible(true);
         panel.add(cb2);
@@ -39,9 +38,30 @@ public class HelloWorldSwing{
             public void actionPerformed(ActionEvent e) {
                 JFrame frame = new JFrame("Result");
                 frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-                frame.setPreferredSize(new Dimension(600, 50));
+                frame.setPreferredSize(new Dimension(600, 300));
                 JPanel panel = new JPanel();
-                JLabel label = new JLabel("The answer to your query");
+                String groupBy = "Customers1." + (String)cb2.getSelectedItem();
+                String cbval = (String)cb.getSelectedItem();
+                String cbsign = (cbval == "Highest") ? ">=" : "<=";
+                String cbsignhtml = (cbval == "Highest") ? "&gt;=" : "&lt;=";
+                String query = ("SELECT " + groupBy + ", ROUND(SUM(P1.amount),2) AS Total_Amount \n"+
+                                "FROM Customers1 JOIN Payments1 \n"+
+                                "ON Customers1.customerNumber = Payments1.customerNumber \n"+
+                                "GROUP BY \n" + groupBy + "\n" +
+                                " HAVING SUM(P1.amount) "+cbsign+" ALL (SELECT SUM(Payments1.amount) \n"+
+                                "FROM Customers1 JOIN Payments1 \n"+
+                                "ON Customers1.customerNumber = Payments1.customerNumber \n"+ 
+                                "GROUP BY " + groupBy + ");");
+
+                 String htmlquery = ("<html>SELECT " + groupBy + ", ROUND(SUM(P1.amount),2) AS Total_Amount <br>"+
+                                "FROM Customers1 JOIN Payments1 <br>"+
+                                "ON Customers1.customerNumber = Payments1.customerNumber <br>"+
+                                "GROUP BY \n" + groupBy + "<br>" +
+                                " HAVING SUM(P1.amount) "+cbsignhtml+" ALL (SELECT SUM(Payments1.amount) <br>"+
+                                "FROM Customers1 JOIN Payments1 <br>"+
+                                "ON Customers1.customerNumber = Payments1.customerNumber <br>"+ 
+                                "GROUP BY " + groupBy + ");</html>");
+                JLabel label = new JLabel(htmlquery);
                 panel.add(label);
                 System.out.println("Button clicked.");
                 frame.getContentPane().add(panel);
