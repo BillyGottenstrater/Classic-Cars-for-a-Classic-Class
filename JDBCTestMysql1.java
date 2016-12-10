@@ -194,7 +194,7 @@ public class JDBCTestMysql1 {
   public static void initTable(Connection conn, String tableName)
   {
     String str = "LOAD DATA LOCAL INFILE 'dataFiles/" + tableName + ".txt' INTO TABLE \n"
-    + tableName + "FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES \n" 
+    + tableName + " FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES \n" 
     + "TERMINATED BY '\n'";
     try{
       Statement s = conn.createStatement();
@@ -237,7 +237,7 @@ public class JDBCTestMysql1 {
 
     try {
       Statement s2 = conn.createStatement();
-      s2.executeUpdate("LOAD DATA LOCAL INFILE 'Customers1.txt' INTO TABLE Customers1 FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n'");
+      //s2.executeUpdate("LOAD DATA LOCAL INFILE 'Customers1.txt' INTO TABLE Customers1 FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n'");
       //s2.executeUpdate("INSERT INTO Books VALUES(1, 'Database Systems','Ullman')");
       //s2.executeUpdate("INSERT INTO Books VALUES(2, 'Artificial Intelligence', 'Russel, Norvig')");   
       //s2.executeUpdate("INSERT INTO Books VALUES(3, 'Problem Solving in C', 'Hanly, Koffman')");   

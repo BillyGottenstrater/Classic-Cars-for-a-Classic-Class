@@ -15,26 +15,31 @@ public class HelloWorldSwing{
      */
     private static void createAndShowGUI() {
         //Create and set up the window.
-        JFrame frame = new JFrame("HelloWorldSwing");
+        JFrame frame = new JFrame("Queries for Classic Cars Sales");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setPreferredSize(new Dimension(600, 500));
+        
+        JPanel bigPanel = new JPanel();
+        bigPanel.setLayout(new BoxLayout(bigPanel,BoxLayout.Y_AXIS));
+
         JPanel panel = new JPanel();
         JLabel label = new JLabel("Construct your query : ");
         label.setVisible(true); 
         panel.add(label);
         String[] choices = { "Highest","Lowest"};
-        JComboBox<String> cb = new JComboBox<String>(choices);
+        final JComboBox<String> cb = new JComboBox<String>(choices);
         cb.setVisible(true);
         panel.add(cb);
         JLabel label2 = new JLabel("spending");
         panel.add(label2);
         String[] choices2 = {"Country", "CustomerName"};
-        JComboBox<String> cb2 = new JComboBox<String>(choices2);
+        final JComboBox<String> cb2 = new JComboBox<String>(choices2);
         cb2.setVisible(true);
         panel.add(cb2);
         JButton btn = new JButton("Query");
         panel.add(btn);
         btn.addActionListener( new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 JFrame frame = new JFrame("Result");
                 frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
@@ -53,7 +58,7 @@ public class HelloWorldSwing{
                                 "ON Customers1.customerNumber = Payments1.customerNumber \n"+ 
                                 "GROUP BY " + groupBy + ");");
 
-                 String htmlquery = ("<html>SELECT " + groupBy + ", ROUND(SUM(P1.amount),2) AS Total_Amount <br>"+
+                String htmlquery = ("<html>SELECT " + groupBy + ", ROUND(SUM(P1.amount),2) AS Total_Amount <br>"+
                                 "FROM Customers1 JOIN Payments1 <br>"+
                                 "ON Customers1.customerNumber = Payments1.customerNumber <br>"+
                                 "GROUP BY \n" + groupBy + "<br>" +
@@ -69,7 +74,27 @@ public class HelloWorldSwing{
                 frame.setVisible(true);
             }
         });
-        frame.getContentPane().add(panel);
+
+        JPanel panelReset = new JPanel();
+        JButton resetButton = new JButton("Restore Tables");
+        panelReset.add(resetButton);
+        resetButton.addActionListener( new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame frame = new JFrame("Result");
+                frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+                frame.setPreferredSize(new Dimension(600, 300));
+                JPanel panelAfterReset = new JPanel();
+                JLabel words = new JLabel("Tables are restored.");
+                panelAfterReset.add(words);
+                frame.getContentPane().add(panelAfterReset);
+                frame.pack();
+                frame.setVisible(true);
+            }
+        });
+        bigPanel.add(panel);
+        bigPanel.add(panelReset);
+        frame.getContentPane().add(bigPanel);
 
         //Add the ubiquitous "Hello World" label.
         //JLabel label2 = new JLabel("Hello World");
