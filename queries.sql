@@ -36,3 +36,12 @@ AND Orders1.customerNumber = Customers1.customerNumber
 GROUP BY Customers1.customerName;
 
 
+# Max spending of a customer:
+SELECT C1.customerName, ROUND(SUM(P1.amount),2) AS Total_Amount
+FROM Customers1 C1 JOIN Payments1 P1
+ON C1.customerNumber = P1.customerNumber 
+GROUP BY C1.customerName
+HAVING SUM(P1.amount) >= ALL (SELECT SUM(Payments1.amount)
+FROM Customers1 JOIN Payments1 
+ON Customers1.customerNumber = Payments1.customerNumber 
+GROUP BY Customers1.customerName);

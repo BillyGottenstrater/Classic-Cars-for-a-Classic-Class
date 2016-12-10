@@ -10,16 +10,12 @@
 *
 */
 
-//     ---------------------
 import java.sql.*;
-// -----------------------
-
-
 import java.util.*;
 import java.io.*;
 import java.lang.*;
 
-public class lab8 {
+public class Queries {
     
   private static Connection conn;
   private static int target = 1;
@@ -306,11 +302,4 @@ public class lab8 {
   }  
 
 }
-
-
-
-
-
-
-
 
