@@ -211,6 +211,7 @@ public class Application{
      * this method should be invoked from the
      * event-dispatching thread.
      */
+
     private static void createAndShowGUI(Connection conn) {
         //Create and set up the window.
         JFrame frame = new JFrame("Queries for Classic Cars Sales");
@@ -241,7 +242,7 @@ public class Application{
             public void actionPerformed(ActionEvent e) {
                 JFrame frame = new JFrame("Result");
                 frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-                frame.setPreferredSize(new Dimension(600, 300));
+                frame.setPreferredSize(new Dimension(600, 150));
                 JPanel panel = new JPanel();
                 String cb2val = (String)cb2.getSelectedItem();
                 String groupBy = "Customers1." + ((cb2val == "Customer") ? "CustomerName" : cb2val); 
@@ -289,6 +290,68 @@ public class Application{
                 frame.setVisible(true);
             }
         });
+        
+        int numModels = 0;
+        try{
+            Statement s = conn.createStatement();
+            ResultSet result = s.executeQuery("SELECT COUNT(DISTINCT EmployeeNumber) FROM Employees1");
+            // ResultSetMetaData rsmd = result.getMetaData();
+            boolean f = result.next();
+            while (f)
+            {
+                numModels = Integer.parseInt(result.getString(1));
+                //if result.getString = 
+                f = result.next();
+            }
+            // JLabel querylabel = new JLabel(output);
+            // panel.add(querylabel);
+        }
+        catch (Exception ee) {System.out.println("Error in getting number of employees : " + ee);}
+
+        String[] allModels = new String[numModels];
+        
+        try{
+            Statement s = conn.createStatement();
+            ResultSet result = s.executeQuery("SELECT FirstName, LastName FROM Employees1");
+            // ResultSetMetaData rsmd = result.getMetaData();
+            boolean f = result.next();
+            int count = 0;
+            while (f)
+            {
+                allModels[count] = result.getString(1) + " " + result.getString(2);
+                f = result.next();
+                count++;
+            }
+        }
+        catch (Exception ee) {System.out.println("Error in filling AllModels Dropdown : " + ee);}
+
+        JPanel panelDelete = new JPanel();
+        JLabel deleteLabel1 = new JLabel("Delete ");
+        JComboBox<String> modelDropdown = new JComboBox<String>(allModels);
+        JLabel deleteLabel2 = new JLabel(" from the database");
+        JButton deleteBtn = new JButton("Delete");
+        panelDelete.add(deleteLabel1);
+        panelDelete.add(modelDropdown);
+        panelDelete.add(deleteLabel2);
+        panelDelete.add(deleteBtn);
+
+        deleteBtn.addActionListener( new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int numModels2 = 0;
+                String modelName = (String)modelDropdown.getSelectedItem();
+                JFrame frame = new JFrame("Result");
+                frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+                frame.setPreferredSize(new Dimension(600, 150));
+                JPanel panelAfterDelete = new JPanel();
+                try{
+                Statement deleteStatement = conn.createStatement();
+                deleteStatement.executeUpdate("DELETE FROM Employees1 WHERE FirstName = '" + modelName.split(" ")[0] + "' AND LastName = '" + modelName.split(" ")[1] + "'");
+                }
+                catch(Exception ee){System.out.println("Error in deleting from Employees1 : " + ee);}
+                modelDropdown.removeItem(modelName);
+            }
+        });
 
         JPanel panelReset = new JPanel();
         JButton resetButton = new JButton("Restore Tables");
@@ -298,16 +361,19 @@ public class Application{
             public void actionPerformed(ActionEvent e) {
                 JFrame frame = new JFrame("Result");
                 frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-                frame.setPreferredSize(new Dimension(600, 300));
-                JPanel panelAfterReset = new JPanel();
-                JLabel words = new JLabel("Tables are restored.");
-                panelAfterReset.add(words);
-                frame.getContentPane().add(panelAfterReset);
+                frame.setPreferredSize(new Dimension(600, 150));
+                // JPanel panelAfterReset = new JPanel();
+                resetTables(conn);
+                // JLabel words = new JLabel("Tables are restored.");
+                // panelAfterReset.add(words);
+                // frame.getContentPane().add(panelAfterReset);
                 frame.pack();
-                frame.setVisible(true);
+                frame.setVisible(false);
+                createAndShowGUI(conn);
             }
         });
         bigPanel.add(panel);
+        bigPanel.add(panelDelete);
         bigPanel.add(panelReset);
         frame.getContentPane().add(bigPanel);
 
