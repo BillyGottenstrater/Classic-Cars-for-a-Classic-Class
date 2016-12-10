@@ -261,14 +261,15 @@ public class Application{
                     ResultSet result = s.executeQuery(query);
                     ResultSetMetaData rsmd = result.getMetaData();
                     boolean f = result.next();
+                    String output = "";
                     while (f)
                     {
-                        for (int i = 1; i <= rsmd.getColumnCount(); i++) {
-                          System.out.print(result.getString(i) + ", ");  
-                      }
-                      System.out.println();
+                        output = cb2val + " " + result.getString(1) + " has spent a total of $" + result.getString(2);
+                      System.out.println(output);
                       f = result.next();
                     }
+                    JLabel querylabel = new JLabel(output);
+                    panel.add(querylabel);
                 }
                 catch (Exception ee) {System.out.println("Error in getting data from Database : " + ee);}
 
