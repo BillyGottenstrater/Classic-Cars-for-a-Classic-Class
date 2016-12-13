@@ -216,7 +216,7 @@ public class Application{
         //Create and set up the window.
         JFrame frame = new JFrame("Queries for Classic Cars Sales");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setPreferredSize(new Dimension(600, 500));
+        frame.setPreferredSize(new Dimension(700, 500));
         
         JPanel bigPanel = new JPanel();
         bigPanel.setLayout(new BoxLayout(bigPanel,BoxLayout.Y_AXIS));
