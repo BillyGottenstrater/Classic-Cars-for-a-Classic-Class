@@ -242,7 +242,7 @@ public class Application{
             public void actionPerformed(ActionEvent e) {
                 JFrame frame = new JFrame("Result");
                 frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-                frame.setPreferredSize(new Dimension(600, 150));
+                frame.setPreferredSize(new Dimension(600, 60));
                 JPanel panel = new JPanel();
                 String cb2val = (String)cb2.getSelectedItem();
                 String groupBy = "Customers1." + ((cb2val == "Customer") ? "CustomerName" : cb2val); 
@@ -399,7 +399,7 @@ public class Application{
                 String city = (String)officesDropdown.getSelectedItem();
                 JFrame frame = new JFrame(city+ " Office information");
                 frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-                frame.setPreferredSize(new Dimension(600, 150));
+                frame.setPreferredSize(new Dimension(600, 100));
                 JPanel panelAfterOffice = new JPanel();
                 String query = ("SELECT addressLine1, addressLine2, State, postalCode, country, phone "
                                 +"FROM Offices1 " 
@@ -434,6 +434,92 @@ public class Application{
             }
         });
 
+        // Orders functionality
+
+        int numCustomers = 0;
+        try{
+            Statement s = conn.createStatement();
+            ResultSet result = s.executeQuery("SELECT COUNT(DISTINCT CustomerNumber) FROM Customers1");
+            // ResultSetMetaData rsmd = result.getMetaData();
+            boolean f = result.next();
+            while (f)
+            {
+                numCustomers = Integer.parseInt(result.getString(1));
+                //if result.getString = 
+                f = result.next();
+            }
+        }
+        catch (Exception ee) {System.out.println("Error in getting number of customers : " + ee);}
+
+        String[] allCustomers = new String[numCustomers];
+        
+        try{
+            Statement s = conn.createStatement();
+            ResultSet result = s.executeQuery("SELECT customerName FROM Customers1");
+            // ResultSetMetaData rsmd = result.getMetaData();
+            boolean f = result.next();
+            int count = 0;
+            while (f)
+            {
+                allCustomers[count] = result.getString(1);
+                f = result.next();
+                count++;
+            }
+        }
+        catch (Exception ee) {System.out.println("Error in filling AllCustomers Dropdown : " + ee);}
+        JPanel panelOrder = new JPanel();
+        JButton orderBtn = new JButton("Find products");
+        JLabel orderLabel = new JLabel("Find all products ordered by ");
+        JComboBox<String> customerDropdown = new JComboBox<String>(allCustomers);
+        panelOrder.add(orderLabel);
+        panelOrder.add(customerDropdown);
+        panelOrder.add(orderBtn);
+
+        orderBtn.addActionListener( new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String customer = (String)customerDropdown.getSelectedItem();
+                JFrame frame = new JFrame("Orders by " + customer);
+                frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+                frame.setPreferredSize(new Dimension(600, 150));
+                JPanel panelAfterOffice = new JPanel();
+                String query = ("SELECT C.CustomerName, P.ProductName, DATE(O.orderDate), O.Status "
+                                +"FROM Customers1 C, Products1 P, Orders1 O, OrderDetails1 OD "
+                                +"WHERE C.CustomerNumber = O.CustomerNumber "
+                                +"AND C.CustomerName = '"+customer+"' "
+                                +"AND OD.OrderNumber = O.OrderNumber "
+                                +"AND P.ProductCode = OD.ProductCode;");
+                try{
+                    Statement s = conn.createStatement();
+                    ResultSet result = s.executeQuery(query);
+                    ResultSetMetaData rsmd = result.getMetaData();
+                    boolean f = result.next();
+                    int count = 0;
+                    String output = "<html><tr><th>Product</th><th>Date</th><th>Status</th></tr>";
+                    while (f)
+                    {
+                        String product = result.getString(2);
+                        String date = result.getString(3);
+                        String status = result.getString(4);
+
+                        output += "<tr><td>" + product + "</td>"+ "<td>" + date + "</td>" + "<td>" + status + "</td>"+"</tr>";
+                        f = result.next();
+                        count++;
+                    }
+                    output += "</html>";
+                    JLabel orderslabel = new JLabel(output);
+                    JPanel ordersPanel = new JPanel();
+                    ordersPanel.add(orderslabel);
+                    System.out.println("Button clicked.");
+                    frame.getContentPane().add(ordersPanel);
+                    frame.setPreferredSize(new Dimension(600, 50+ 30*count));
+                    frame.pack();
+                    frame.setVisible(true);
+                }
+                catch (Exception ee) {System.out.println("Error in getting data from Database : " + ee);}
+            }
+        });
+
         // Reset functionality
         JPanel panelReset = new JPanel();
         JButton resetButton = new JButton("Restore Tables");
@@ -457,13 +543,9 @@ public class Application{
         bigPanel.add(panel);
         bigPanel.add(panelDelete);
         bigPanel.add(panelOffice);
+        bigPanel.add(panelOrder);
         bigPanel.add(panelReset);
         frame.getContentPane().add(bigPanel);
-
-        //Add the ubiquitous "Hello World" label.
-        //JLabel label2 = new JLabel("Hello World");
-        //frame.getContentPane().add(label2);
-        //Display the window.
         frame.pack();
         frame.setVisible(true);
     }
