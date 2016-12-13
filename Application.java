@@ -303,8 +303,6 @@ public class Application{
                 //if result.getString = 
                 f = result.next();
             }
-            // JLabel querylabel = new JLabel(output);
-            // panel.add(querylabel);
         }
         catch (Exception ee) {System.out.println("Error in getting number of employees : " + ee);}
 
@@ -353,6 +351,90 @@ public class Application{
             }
         });
 
+
+        // office functionality
+
+        int numOffices = 0;
+        try{
+            Statement s = conn.createStatement();
+            ResultSet result = s.executeQuery("SELECT COUNT(DISTINCT officeCode) FROM Offices1");
+            // ResultSetMetaData rsmd = result.getMetaData();
+            boolean f = result.next();
+            while (f)
+            {
+                numOffices = Integer.parseInt(result.getString(1));
+                //if result.getString = 
+                f = result.next();
+            }
+        }
+        catch (Exception ee) {System.out.println("Error in getting number of offices : " + ee);}
+
+        String[] allOffices = new String[numOffices];
+        
+        try{
+            Statement s = conn.createStatement();
+            ResultSet result = s.executeQuery("SELECT city FROM Offices1");
+            // ResultSetMetaData rsmd = result.getMetaData();
+            boolean f = result.next();
+            int count = 0;
+            while (f)
+            {
+                allOffices[count] = result.getString(1);
+                f = result.next();
+                count++;
+            }
+        }
+        catch (Exception ee) {System.out.println("Error in filling AllOffices Dropdown : " + ee);}
+        JPanel panelOffice = new JPanel();
+        JButton officeBtn = new JButton("Find info");
+        JLabel officeLabel = new JLabel("Find information about the office in ");
+        JComboBox<String> officesDropdown = new JComboBox<String>(allOffices);
+        panelOffice.add(officeLabel);
+        panelOffice.add(officesDropdown);
+        panelOffice.add(officeBtn);
+
+        officeBtn.addActionListener( new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String city = (String)officesDropdown.getSelectedItem();
+                JFrame frame = new JFrame(city+ " Office information");
+                frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+                frame.setPreferredSize(new Dimension(600, 150));
+                JPanel panelAfterOffice = new JPanel();
+                String query = ("SELECT addressLine1, addressLine2, State, postalCode, country, phone "
+                                +"FROM Offices1 " 
+                                +"WHERE city = '"+city+"'");
+                try{
+                    Statement s = conn.createStatement();
+                    ResultSet result = s.executeQuery(query);
+                    ResultSetMetaData rsmd = result.getMetaData();
+                    boolean f = result.next();
+                    String output = "";
+                    while (f)
+                    {
+                        String line1 = result.getString(1) != null ? result.getString(1) : "";
+                        String line2 = result.getString(2) != null ? result.getString(2) : "";
+                        String state = result.getString(3) != null ? result.getString(3) : "";
+                        String postalCode = result.getString(4) != null ? result.getString(4) : "";
+                        String country = result.getString(5) != null ? result.getString(5) : "";
+                        String phone = result.getString(6) != null ? result.getString(6) : "";
+                        output = "<html><pre><strong>Address</strong>: " + line1 + "<br>         " + line2 + (line2 == "" ? "" :"<br>         ") + city + ", " + state + " " + postalCode + ", " + country + "<br><strong>Phone</strong>:   " + phone +"</pre></html>";
+                      System.out.println(output);
+                      f = result.next();
+                    }
+                    JLabel querylabel = new JLabel(output);
+                    JPanel queryPanel = new JPanel();
+                    queryPanel.add(querylabel);
+                    System.out.println("Button clicked.");
+                    frame.getContentPane().add(queryPanel);
+                    frame.pack();
+                    frame.setVisible(true);
+                }
+                catch (Exception ee) {System.out.println("Error in getting data from Database : " + ee);}
+            }
+        });
+
+        // Reset functionality
         JPanel panelReset = new JPanel();
         JButton resetButton = new JButton("Restore Tables");
         panelReset.add(resetButton);
@@ -374,6 +456,7 @@ public class Application{
         });
         bigPanel.add(panel);
         bigPanel.add(panelDelete);
+        bigPanel.add(panelOffice);
         bigPanel.add(panelReset);
         frame.getContentPane().add(bigPanel);
 
@@ -403,21 +486,21 @@ public class Application{
       try { 
     // conn = DriverManager.getConnection(url, "LOGIN_ID", "PASSWORD");
         conn = DriverManager.getConnection(url +"user=testuser&password=abc123&");
-    }
-    catch (Exception ex)
-    {
-      System.out.println("Could not open connection");
-      System.out.println(ex);
-    };
+        }
+        catch (Exception ex)
+        {
+          System.out.println("Could not open connection");
+          System.out.println(ex);
+        };
 
-    System.out.println("Connected");
-    try {
-      resetTables(conn);
-      //System.out.println(table);
-      // s1.executeUpdate("use dekhtyar");
-      //s1.executeUpdate(table);
-    } 
-    catch (Exception ee) {System.out.println("Error in creating tables : " + ee);}
+        System.out.println("Connected");
+        try {
+          //resetTables(conn);
+          //System.out.println(table);
+          // s1.executeUpdate("use dekhtyar");
+          //s1.executeUpdate(table);
+        } 
+        catch (Exception ee) {System.out.println("Error in creating tables : " + ee);}
 
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
