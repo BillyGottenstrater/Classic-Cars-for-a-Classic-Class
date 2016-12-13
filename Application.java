@@ -242,7 +242,7 @@ public class Application{
             public void actionPerformed(ActionEvent e) {
                 JFrame frame = new JFrame("Result");
                 frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-                frame.setPreferredSize(new Dimension(600, 60));
+                frame.setPreferredSize(new Dimension(700, 60));
                 JPanel panel = new JPanel();
                 String cb2val = (String)cb2.getSelectedItem();
                 String groupBy = "Customers1." + ((cb2val == "Customer") ? "CustomerName" : cb2val); 
@@ -340,7 +340,7 @@ public class Application{
                 String modelName = (String)modelDropdown.getSelectedItem();
                 JFrame frame = new JFrame("Result");
                 frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-                frame.setPreferredSize(new Dimension(600, 150));
+                frame.setPreferredSize(new Dimension(700, 150));
                 JPanel panelAfterDelete = new JPanel();
                 try{
                 Statement deleteStatement = conn.createStatement();
@@ -399,7 +399,7 @@ public class Application{
                 String city = (String)officesDropdown.getSelectedItem();
                 JFrame frame = new JFrame(city+ " Office information");
                 frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-                frame.setPreferredSize(new Dimension(600, 100));
+                frame.setPreferredSize(new Dimension(700, 100));
                 JPanel panelAfterOffice = new JPanel();
                 String query = ("SELECT addressLine1, addressLine2, State, postalCode, country, phone "
                                 +"FROM Offices1 " 
@@ -481,7 +481,7 @@ public class Application{
                 String customer = (String)customerDropdown.getSelectedItem();
                 JFrame frame = new JFrame("Orders by " + customer);
                 frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-                frame.setPreferredSize(new Dimension(600, 150));
+                frame.setPreferredSize(new Dimension(700, 150));
                 JPanel panelAfterOffice = new JPanel();
                 String query = ("SELECT C.CustomerName, P.ProductName, DATE(O.orderDate), O.Status "
                                 +"FROM Customers1 C, Products1 P, Orders1 O, OrderDetails1 OD "
@@ -512,7 +512,7 @@ public class Application{
                     ordersPanel.add(orderslabel);
                     System.out.println("Button clicked.");
                     frame.getContentPane().add(ordersPanel);
-                    frame.setPreferredSize(new Dimension(600, 50+ 30*count));
+                    frame.setPreferredSize(new Dimension(700, 50+ 30*count));
                     frame.pack();
                     frame.setVisible(true);
                 }
@@ -529,7 +529,7 @@ public class Application{
             public void actionPerformed(ActionEvent e) {
                 JFrame frame = new JFrame("Result");
                 frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-                frame.setPreferredSize(new Dimension(600, 150));
+                frame.setPreferredSize(new Dimension(700, 150));
                 // JPanel panelAfterReset = new JPanel();
                 resetTables(conn);
                 // JLabel words = new JLabel("Tables are restored.");
